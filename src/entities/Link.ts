@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn, Relation } from 'typeorm';
+import { User } from './User';
 
 @Entity()
-export class User {
+export class Link {
   @PrimaryColumn('uuid')
   linkId: string;
 
@@ -13,4 +14,7 @@ export class User {
 
   @Column({ default: 0 })
   numHits: number;
+
+  @ManyToOne(() => User, (user) => user.links)
+  user: Relation<User>;
 }
