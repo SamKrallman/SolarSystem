@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import argon2 from 'argon2';
-import { addNewUser } from '../models/UserModel';
+import { getUserByUsername, addNewUser } from '../models/UserModel';
 import { parseDatabaseError } from '../utils/db-utils';
 
 async function registerUser(req: Request, res: Response): Promise<void> {
@@ -28,4 +28,22 @@ async function registerUser(req: Request, res: Response): Promise<void> {
   }
 }
 
-export { registerUser };
+async function logIn(req: Request, res: Response): Promise<void> {
+  const { username, password } = req.body as NewUserRequest;
+  const user = await getUserByUsername(username);
+
+  if (!user) {
+    res.sendStatus(404);
+    return;
+  }
+
+  const { passwordHash } = user;
+  if (!(await argon2.verify(passwordHash, password))) {
+    res.sendStatus(404);
+    return;
+  }
+
+  res.sendStatus(200);
+}
+
+export { registerUser, logIn };
