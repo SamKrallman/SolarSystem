@@ -36,4 +36,22 @@ async function createNewLink(originalUrl: string, linkId: string, creator: User)
   return newLink;
 }
 
-export { getLinkById, createLinkId, createNewLink };
+async function updateLinkVisits(link: Link): Promise<Link> {
+  const updatedLink = link;
+  updatedLink.numHits += 1;
+  const newDate = new Date();
+  updatedLink.lastAccessedOn = newDate;
+
+  await userRepository
+    .createQueryBuilder()
+    .update(Link)
+    .set({ numHits: updatedLink.numHits })
+    .where({ linkId: updatedLink.numHits })
+    .set({ lastAccessedOn: updatedLink.lastAccessedOn })
+    .where({ linkId: updatedLink.lastAccessedOn })
+    .execute();
+
+  return updatedLink;
+}
+
+export { getLinkById, createLinkId, createNewLink, updateLinkVisits };
