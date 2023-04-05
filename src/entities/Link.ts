@@ -1,9 +1,9 @@
-import { Column, Entity, ManyToOne, PrimaryColumn, Relation } from 'typeorm';
+import { Entity, PrimaryColumn, Column, ManyToOne, Relation } from 'typeorm';
 import { User } from './User';
 
 @Entity()
 export class Link {
-  @PrimaryColumn('uuid')
+  @PrimaryColumn()
   linkId: string;
 
   @Column()
